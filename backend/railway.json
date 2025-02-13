@@ -1,6 +1,9 @@
 {
   "build": {
     "builder": "Nixpacks",
+    "backend": {
+      "root": "backend"
+    },
     "buildCommand": "npm install"
   },
   "start": {
