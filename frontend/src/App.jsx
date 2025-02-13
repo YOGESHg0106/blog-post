@@ -6,7 +6,7 @@ import CreatePost from "./pages/CreatePost";
 import ListPost from "./pages/ListPost";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import EditPost from "./Pages/EditPost";
+import EditPost from "./pages/EditPost";
 
 const App = () => {
   return (
