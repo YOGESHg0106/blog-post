@@ -5,16 +5,16 @@ import { AuthContext } from "../context/AuthContext";
 import "../styles/ListPost.css";
 
 const ListPost = () => {
-  const { user } = useContext(AuthContext); // ✅ Check user auth
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     if (!user) {
-      navigate("/login"); // ✅ Redirect if not logged in
+      navigate("/login");
     } else {
       axios
-        .get("http://localhost:5000/api/blogs")
+        .get("https://blog-post-production-f5b3.up.railway.app/api/blogs") // ✅ Updated API URL
         .then((res) => setPosts(res.data))
         .catch((err) => console.error("Error fetching posts:", err));
     }
@@ -22,7 +22,9 @@ const ListPost = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:5000/api/blogs/${id}`)
+      .delete(
+        `https://blog-post-production-f5b3.up.railway.app/api/blogs/${id}`
+      ) // ✅ Updated API URL
       .then(() => setPosts(posts.filter((post) => post._id !== id)))
       .catch((err) => console.error("Error deleting post:", err));
   };
@@ -38,9 +40,14 @@ const ListPost = () => {
           posts.map((post) => (
             <div key={post._id} className="post-card">
               <img
-                src={`http://localhost:5000${post.image}`}
+                src={
+                  post.image?.startsWith("http")
+                    ? post.image
+                    : `https://blog-post-production-f5b3.up.railway.app${post.image}`
+                }
                 alt={post.title}
                 className="post-image"
+                onError={(e) => (e.target.src = "/fallback-image.jpg")} // ✅ Fallback in case of broken image
               />
               <h3 className="post-title">{post.title}</h3>
               <p className="post-description">{post.description}</p>
@@ -61,7 +68,9 @@ const ListPost = () => {
             </div>
           ))
         ) : (
-          <p>No posts available.</p>
+          <p className="no-posts-message">
+            No posts available. Create a new post!
+          </p>
         )}
       </div>
     </div>

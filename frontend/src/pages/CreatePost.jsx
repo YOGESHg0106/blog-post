@@ -7,6 +7,7 @@ const CreatePost = () => {
   const [post, setPost] = useState({ title: "", description: "" });
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
@@ -19,17 +20,27 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const formData = new FormData();
-    formData.append("title", post.title);
-    formData.append("description", post.description);
-    if (image) formData.append("image", image); // Send file, not base64
+    try {
+      const formData = new FormData();
+      formData.append("title", post.title);
+      formData.append("description", post.description);
+      if (image) formData.append("image", image);
 
-    await axios.post("http://localhost:5000/api/blogs", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+      await axios.post(
+        "https://blog-post-production-f5b3.up.railway.app/api/blogs", // ✅ Updated API URL
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
 
-    navigate("/");
+      navigate("/");
+    } catch (error) {
+      console.error("Error creating post:", error);
+      alert("Failed to create post. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,7 +70,9 @@ const CreatePost = () => {
         )}
 
         <div className="button-group">
-          <button type="submit">Create</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating..." : "Create"}
+          </button>
           <button
             type="button"
             className="back-button"

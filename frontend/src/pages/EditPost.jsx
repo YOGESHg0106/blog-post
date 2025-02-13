@@ -17,18 +17,20 @@ const EditPost = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/blogs/${id}`)
+      .get(`https://blog-post-production-f5b3.up.railway.app/api/blogs/${id}`) // ✅ Updated API URL
       .then((res) => {
         setPost({
           title: res.data.title,
           description: res.data.description,
-          image: res.data.image || null,
+          image: null, // Clear previous image input
         });
         setPreview(
-          res.data.image ? `http://localhost:5000${res.data.image}` : ""
+          res.data.image
+            ? `https://blog-post-production-f5b3.up.railway.app${res.data.image}`
+            : ""
         );
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error fetching post:", err));
   }, [id]);
 
   const handleChange = (e) => {
@@ -50,12 +52,16 @@ const EditPost = () => {
     if (post.image) formData.append("image", post.image);
 
     try {
-      await axios.put(`http://localhost:5000/api/blogs/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.put(
+        `https://blog-post-production-f5b3.up.railway.app/api/blogs/${id}`, // ✅ Updated API URL
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
       navigate("/");
     } catch (err) {
-      console.error("Error updating post", err);
+      console.error("Error updating post:", err);
+      alert("Failed to update post. Please try again.");
     }
   };
 
