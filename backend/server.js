@@ -12,7 +12,10 @@ const app = express();
 // ✅ CORS Middleware (Adjust to match frontend URL)
 app.use(
   cors({
-    origin: "http://localhost:5173", // Change this if frontend is deployed
+    origin: [
+      "http://localhost:5173", // Local development
+      "https://blog-post--seven.vercel.app", // ✅ Deployed frontend
+    ],
     credentials: true,
   })
 );
